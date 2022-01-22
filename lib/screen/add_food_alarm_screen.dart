@@ -55,7 +55,8 @@ class AddFoodAlarmScreen extends StatelessWidget {
                               ..alarmType = "öğün alarmı"
                               ..walkNumber = 20
                               ..computerId = ""
-                              ..dateCreated = Timestamp.now()
+                              ..alarmTimeTitle =
+                                  Timestamp.fromDate(alarmTime.value)
                               ..alarmTime = Timestamp.fromDate(alarmTime.value),
                             UserController.instance.user.id!,
                           );

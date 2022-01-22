@@ -62,7 +62,8 @@ class AddFamilyAlarmScreen extends StatelessWidget {
                                 ..alarmType = "bilgisayar kapatıcı"
                                 ..walkNumber = 20
                                 ..computerId = _compVal!.value.id
-                                ..dateCreated = Timestamp.now()
+                                ..alarmTimeTitle =
+                                    Timestamp.fromDate(alarmTime.value)
                                 ..alarmTime =
                                     Timestamp.fromDate(alarmTime.value),
                               _famVal!.value.id!,
@@ -89,7 +90,8 @@ class AddFamilyAlarmScreen extends StatelessWidget {
                               ..alarmName = _alarmTextController.text
                               ..computerId = ""
                               ..alarmType = _typeVal.value
-                              ..dateCreated = Timestamp.now()
+                              ..alarmTimeTitle =
+                                  Timestamp.fromDate(alarmTime.value)
                               ..alarmTime = Timestamp.fromDate(alarmTime.value),
                             _famVal!.value.id!,
                           );

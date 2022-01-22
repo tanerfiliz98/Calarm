@@ -22,8 +22,8 @@ Future<void> _initForegroundTask() async {
       channelName: 'Foreground Notification',
       channelDescription:
           'This notification appears when the foreground service is running.',
-      channelImportance: NotificationChannelImportance.LOW,
-      priority: NotificationPriority.LOW,
+      channelImportance: NotificationChannelImportance.HIGH,
+      priority: NotificationPriority.HIGH,
       playSound: false,
       iconData: const NotificationIconData(
         resType: ResourceType.mipmap,
@@ -36,9 +36,9 @@ Future<void> _initForegroundTask() async {
       playSound: false,
     ),
     foregroundTaskOptions: const ForegroundTaskOptions(
-      interval: 600000,
-      autoRunOnBoot: true,
+      interval: 60000,
       allowWifiLock: true,
+      autoRunOnBoot: true,
     ),
   );
 }
@@ -53,17 +53,16 @@ Future<void> main() async {
 
   WidgetsBinding.instance!.addObserver(LifeCycleListener());
 
+  await Firebase.initializeApp();
+  await AndroidAlarmManager.initialize();
+  initLocalNot();
+  _initForegroundTask();
   List<CameraDescription> cameras = await availableCameras();
   CameraDescription cameraDescription = cameras.firstWhere(
     (CameraDescription camera) =>
         camera.lensDirection == CameraLensDirection.front,
   );
   CameraService().cameraDescription = cameraDescription;
-
-  await Firebase.initializeApp();
-  await AndroidAlarmManager.initialize();
-  initLocalNot();
-  _initForegroundTask();
   AlarmPollingWorker.instance.createPollingWorker();
   runApp(const MyApp());
 }

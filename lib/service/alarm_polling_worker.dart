@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:calarm/screen/root_screen.dart';
 import 'package:calarm/service/alarm_player.dart';
-import 'package:calarm/service/alarm_scheduler.dart';
 import 'package:calarm/service/database.dart';
 import 'package:calarm/util/alarm_status.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
-import 'package:vibration/vibration.dart';
 import 'package:wakelock/wakelock.dart';
 
 class AlarmPollingWorker {
@@ -38,12 +36,13 @@ class AlarmPollingWorker {
           if (AlarmStatus.instance.isAlarm.value == false) {
             timer.cancel();
             Database.instance.alarmlistenerStop();
+            AlarmPlayer.instance.stop();
           } else {
-            if (timer.tick > 597) {
+            if (timer.tick > 590) {
               AlarmStatus.instance.isAlarm.value = false;
               Database.instance.alarmlistenerStop();
-              AlarmScheduler().makeAlarm(AlarmStatus.instance.alarmId.value!,
-                  DateTime.now().add(Duration(minutes: 1, milliseconds: 100)));
+              AlarmPlayer.instance.stop();
+              Database.instance.updateAlarmTime(int.parse(alarmId));
               timer.cancel();
             }
           }

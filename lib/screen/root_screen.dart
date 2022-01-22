@@ -1,6 +1,5 @@
 import 'dart:isolate';
 
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:calarm/controller/auth_controller.dart';
 import 'package:calarm/controller/user_controller.dart';
 import 'package:calarm/screen/add_computer_close_screen.dart';
@@ -34,8 +33,13 @@ class ForegroundTaskHandler extends TaskHandler {
     Database.instance.listenAlarms(uid);
   }
 
+  int i = 0;
   @override
-  Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {}
+  Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
+    if (i > 1000000000000000000) i = 0;
+
+    i = i + 1;
+  }
 
   @override
   Future<void> onDestroy(DateTime timestamp) async {

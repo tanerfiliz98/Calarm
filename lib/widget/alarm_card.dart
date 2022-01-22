@@ -21,7 +21,7 @@ class AlarmCard extends StatelessWidget {
               child: Text(
                 (Get.find<ALarmListController>()
                     .format
-                    .format(alarm!.alarmTime!.toDate())),
+                    .format(alarm!.alarmTimeTitle!.toDate())),
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

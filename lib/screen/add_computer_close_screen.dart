@@ -52,7 +52,8 @@ class AddComputerCloseAlarmScreen extends StatelessWidget {
                               ..alarmType = "bilgisayar kapatıcı"
                               ..walkNumber = 20
                               ..computerId = _typeVal!.value.id
-                              ..dateCreated = Timestamp.now()
+                              ..alarmTimeTitle =
+                                  Timestamp.fromDate(alarmTime.value)
                               ..alarmTime = Timestamp.fromDate(alarmTime.value),
                             UserController.instance.user.id!,
                           );

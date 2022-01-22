@@ -12,8 +12,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'alarm_player.dart';
-
 class Database {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Database._privateConstructor();
@@ -50,7 +48,7 @@ class Database {
       UserModel user = await getUser(uid);
       String retVal = "";
       await _firestore.collection("users").doc(uid).collection("alarms").add({
-        'dateCreated': alarm.dateCreated,
+        'alarmTimeTitle': alarm.alarmTimeTitle,
         'alarmName': alarm.alarmName,
         'alarmId': user.lastAlarmId,
         'alarmType': alarm.alarmType,
@@ -58,7 +56,6 @@ class Database {
         'alarmStatus': true,
         'alarmTime': alarm.alarmTime,
         'computerId': alarm.computerId,
-        'alarmOffPin': alarm.alarmOffPin
       }).then((value) => retVal = value.id);
       user.lastAlarmId = user.lastAlarmId! + 1;
       _firestore
@@ -185,7 +182,7 @@ class Database {
         .collection("users")
         .doc(uid)
         .collection("alarms")
-        .orderBy("dateCreated", descending: true)
+        .orderBy("alarmId", descending: true)
         .snapshots()
         .listen((QuerySnapshot query) {
       query.docChanges.forEach((change) {
@@ -215,27 +212,32 @@ class Database {
 
   StreamSubscription? sub;
   listenAlarm(int alarmId) async {
-    String userId = FirebaseAuth.instance.currentUser!.uid;
-    sub = _firestore
-        .collection("users")
-        .doc(userId)
-        .collection("alarms")
-        .where("alarmId", isEqualTo: alarmId)
-        .limit(1)
-        .snapshots()
-        .listen((event) {
-      event.docChanges.forEach((element) {
-        if (element.doc["alarmStatus"] == false) {
-          AlarmStatus.instance.isAlarm.value = false;
-          AlarmStatus.instance.alarmId.value = -1;
-        }
+    try {
+      String userId = FirebaseAuth.instance.currentUser!.uid;
+      sub = _firestore
+          .collection("users")
+          .doc(userId)
+          .collection("alarms")
+          .where("alarmId", isEqualTo: alarmId)
+          .limit(1)
+          .snapshots()
+          .listen((event) {
+        event.docChanges.forEach((element) {
+          if (element.doc["alarmStatus"] == false) {
+            AlarmStatus.instance.isAlarm.value = false;
+            AlarmStatus.instance.alarmId.value = -1;
+          }
+        });
       });
-    });
+    } catch (e) {
+      Timer(Duration(seconds: 1), () {
+        listenAlarm(alarmId);
+      });
+    }
   }
 
   alarmlistenerStop() async {
     await sub?.cancel();
-    AlarmPlayer.instance.stop();
   }
 
   Future<FoodListModel> getFoodList(String uid, String alarmId) async {
@@ -331,6 +333,36 @@ class Database {
       DocumentSnapshot doc =
           await _firestore.collection("family").doc(fid).get();
       return FamilyModel.fromDocumentSnapshot(doc);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  updateAlarmTime(int alarmId) {
+    try {
+      String userId = FirebaseAuth.instance.currentUser!.uid;
+      _firestore
+          .collection("users")
+          .doc(userId)
+          .collection("alarms")
+          .where("alarmId", isEqualTo: alarmId)
+          .get()
+          .then((value) => value.docs.forEach((element) {
+                AlarmModel model = AlarmModel.fromDocumentSnapshot(element);
+                int add = 0;
+                if (model.alarmTime!.millisecondsSinceEpoch -
+                        model.alarmTimeTitle!.millisecondsSinceEpoch !=
+                    0) {
+                  add = model.alarmTime!.millisecondsSinceEpoch +
+                      1 -
+                      model.alarmTimeTitle!.millisecondsSinceEpoch;
+                }
+                element.reference.update({
+                  "alarmTime": model.alarmTimeTitle!.toDate().add(Duration(
+                      minutes: 1, seconds: 59, milliseconds: 999 + add))
+                });
+              }));
     } catch (e) {
       print(e);
       rethrow;

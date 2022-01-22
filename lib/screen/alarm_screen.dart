@@ -168,11 +168,16 @@ class AlarmScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(50),
                 child: FlatButton(
                   child: Text("Adim Sustur"),
-                  onPressed: () {
-                    Get.bottomSheet(
+                  onPressed: () async {
+                    var data = await Get.bottomSheet(
                       walkAlarmScreen(),
                       backgroundColor: ThemeData.dark().canvasColor,
                     );
+                    if (data == true) {
+                      Database.instance.disableAlarm(
+                          UserController.instance.user.id!,
+                          AlarmStatus.instance.alarmId.value!);
+                    }
                   },
                 ),
               );

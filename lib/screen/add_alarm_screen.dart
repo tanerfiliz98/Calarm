@@ -59,7 +59,8 @@ class AddAlarmScreen extends StatelessWidget {
                             ..alarmName = _alarmTextController.text
                             ..computerId = ""
                             ..alarmType = _typeVal!.value
-                            ..dateCreated = Timestamp.now()
+                            ..alarmTimeTitle =
+                                Timestamp.fromDate(alarmTime.value)
                             ..alarmTime = Timestamp.fromDate(alarmTime.value),
                           UserController.instance.user.id!,
                         );
