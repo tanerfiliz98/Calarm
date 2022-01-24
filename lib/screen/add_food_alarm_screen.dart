@@ -11,6 +11,8 @@ import 'package:intl/intl.dart';
 class AddFoodAlarmScreen extends StatelessWidget {
   AddFoodAlarmScreen({Key? key}) : super(key: key);
   final TextEditingController _foodTextController = TextEditingController();
+  final TextEditingController _alarmTextController =
+      TextEditingController(text: "Alarm");
   Rx<DateTime> alarmTime = DateTime(DateTime.now().year, DateTime.now().month,
           DateTime.now().day, DateTime.now().hour, DateTime.now().minute + 1)
       .obs;
@@ -51,7 +53,10 @@ class AddFoodAlarmScreen extends StatelessWidget {
                         if (_foods.value.isNotEmpty) {
                           String retval = await Database.instance.addAlarmBase(
                             alarm!
-                              ..alarmName = _typeVal!.value + " öğün alarmı"
+                              ..alarmName = _alarmTextController.text +
+                                  " (" +
+                                  _typeVal!.value +
+                                  ")"
                               ..alarmType = "öğün alarmı"
                               ..walkNumber = 20
                               ..computerId = ""
@@ -105,6 +110,17 @@ class AddFoodAlarmScreen extends StatelessWidget {
             }),
             SizedBox(
               height: 20,
+            ),
+            Text("Alarm Notu"),
+            Card(
+                margin: EdgeInsets.all(20),
+                child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: TextFormField(
+                      controller: _alarmTextController,
+                    ))),
+            SizedBox(
+              height: 40,
             ),
             Obx(() {
               return Column(

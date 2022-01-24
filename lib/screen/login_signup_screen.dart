@@ -9,7 +9,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("login"),
+          title: Text("Giriş"),
         ),
         body: SingleChildScrollView(
           child: Center(
@@ -18,15 +18,18 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                  ),
                   TextFormField(
-                    decoration: InputDecoration(hintText: "email"),
+                    decoration: InputDecoration(hintText: "E-Posta"),
                     controller: emailController,
                   ),
                   SizedBox(
                     height: 40,
                   ),
                   TextFormField(
-                    decoration: InputDecoration(hintText: "password"),
+                    decoration: InputDecoration(hintText: "Şifre"),
                     controller: passwordController,
                     obscureText: true,
                   ),
@@ -34,7 +37,7 @@ class LoginScreen extends StatelessWidget {
                     height: 40,
                   ),
                   ElevatedButton(
-                    child: Text("login"),
+                    child: Text("Giriş Yap"),
                     onPressed: () {
                       AuthController.instance.loginUser(
                           emailController.text.trim(),
@@ -45,7 +48,7 @@ class LoginScreen extends StatelessWidget {
                     height: 40,
                   ),
                   ElevatedButton(
-                    child: Text("signup"),
+                    child: Text("Kayıt Ol"),
                     onPressed: () {
                       Get.to(() => SignUpScreen());
                     },
@@ -66,7 +69,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("signup"),
+          title: Text("Kayıt Ol"),
         ),
         body: SingleChildScrollView(
           child: Center(
@@ -75,22 +78,25 @@ class SignUpScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                  ),
                   TextFormField(
-                    decoration: InputDecoration(hintText: "name"),
+                    decoration: InputDecoration(hintText: "Ad"),
                     controller: nameController,
                   ),
                   SizedBox(
                     height: 40,
                   ),
                   TextFormField(
-                    decoration: InputDecoration(hintText: "email"),
+                    decoration: InputDecoration(hintText: "E-Posta"),
                     controller: emailController,
                   ),
                   SizedBox(
                     height: 40,
                   ),
                   TextFormField(
-                    decoration: InputDecoration(hintText: "password"),
+                    decoration: InputDecoration(hintText: "Şifre"),
                     controller: passwordController,
                     obscureText: true,
                   ),
@@ -98,7 +104,7 @@ class SignUpScreen extends StatelessWidget {
                     height: 40,
                   ),
                   ElevatedButton(
-                    child: Text("signup"),
+                    child: Text("Kayıt Ol"),
                     onPressed: () {
                       AuthController.instance.registerUser(
                           emailController.text.trim(),

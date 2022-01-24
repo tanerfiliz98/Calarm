@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 
@@ -16,6 +17,7 @@ class AuthController extends GetxController {
   late UserController _userController;
   FirebaseAuth auth = FirebaseAuth.instance;
   late Rx<User?> _user;
+  RxBool isDark = true.obs;
   AuthController() {
     _userController = UserController.instance;
     _user = Rx<User?>(auth.currentUser);
@@ -23,8 +25,19 @@ class AuthController extends GetxController {
   @override
   onReady() {
     super.onReady();
+    _getTheme();
     _user.bindStream(auth.userChanges());
     ever(_user, _initialScreen);
+  }
+
+  _getTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isDark.value = (prefs.getBool('darkTheme') ?? true);
+    if (isDark.value) {
+      Get.changeTheme(ThemeData.dark());
+    } else {
+      Get.changeTheme(ThemeData.light());
+    }
   }
 
   _initialScreen(User? user) async {
@@ -80,6 +93,12 @@ class AuthController extends GetxController {
     _userController.clear();
     await flutterLocalNotificationsPlugin.cancelAll();
     FlutterForegroundTask.stopService();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getInt('waterReminderDate') != null)
+      await prefs.remove('waterReminderDate');
+    if (prefs.getInt('waterDrink') != null) await prefs.remove('waterDrink');
+    if (prefs.getBool('waterRemindercheck') != null)
+      await prefs.remove('waterRemindercheck');
     await auth.signOut();
   }
 

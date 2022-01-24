@@ -19,6 +19,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> startCallback() async {
   FlutterForegroundTask.setTaskHandler(ForegroundTaskHandler());
@@ -110,13 +111,34 @@ class MainScreen extends StatelessWidget {
                   )),
             ),
             ListTile(
+              title: Obx(() {
+                if (AuthController.instance.isDark.value) {
+                  return Text("Karanlık Tema");
+                } else {
+                  return Text("Aydınlık Tema");
+                }
+              }),
+              onTap: () async {
+                AuthController.instance.isDark.value =
+                    !AuthController.instance.isDark.value;
+                if (AuthController.instance.isDark.value) {
+                  Get.changeTheme(ThemeData.dark());
+                } else {
+                  Get.changeTheme(ThemeData.light());
+                }
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.setBool(
+                    'darkTheme', AuthController.instance.isDark.value);
+              },
+            ),
+            ListTile(
               title: const Text('Aile'),
               onTap: () {
                 Get.to(() => FamilyScreen());
               },
             ),
             ListTile(
-              title: const Text('Bilgisayar Kapatıcı Kur'),
+              title: Text('Bilgisayar Kapatıcı Kur'),
               onTap: () {
                 Get.bottomSheet(
                   AddComputerCloseAlarmScreen(),

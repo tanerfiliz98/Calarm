@@ -49,7 +49,7 @@ class AddFamilyAlarmScreen extends StatelessWidget {
                       child: Text("Alarmı ekle"),
                       onPressed: () async {
                         if (alarmTime.value.isBefore(
-                            DateTime.now().add(Duration(seconds: 5)))) {
+                            DateTime.now().add(Duration(seconds: 2)))) {
                           alarmTime.value =
                               alarmTime.value.add(Duration(days: 1));
                         }
@@ -136,14 +136,14 @@ class AddFamilyAlarmScreen extends StatelessWidget {
             Obx(() {
               return Column(
                 children: [
-                  Text("Members"),
+                  Text("Aile Üyeleri"),
                   Card(
                       margin: EdgeInsets.all(20),
                       child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: famDropdown())),
                   SizedBox(
-                    height: 40,
+                    height: 20,
                   ),
                 ],
               );
@@ -151,23 +151,45 @@ class AddFamilyAlarmScreen extends StatelessWidget {
             Obx(() {
               return Column(
                 children: [
-                  Text("Type"),
+                  Text("Alarm Tipi"),
                   Card(
                       margin: EdgeInsets.all(20),
                       child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: typeDropdown())),
-                  SizedBox(
-                    height: 40,
-                  ),
                 ],
               );
+            }),
+            Obx(() {
+              if (_typeVal.value != types[3])
+                return Column(
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text("Alarm Notu"),
+                    Card(
+                        margin: EdgeInsets.all(20),
+                        child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: TextFormField(
+                              controller: _alarmTextController,
+                            ))),
+                    SizedBox(
+                      height: 20,
+                    )
+                  ],
+                );
+              else
+                return SizedBox(
+                  height: 20,
+                );
             }),
             Obx(() {
               if (_typeVal.value == types[3]) {
                 return Column(
                   children: [
-                    Text("Pc"),
+                    Text("Bilgisayarlar"),
                     Card(
                         margin: EdgeInsets.all(20),
                         child: Padding(
@@ -181,7 +203,7 @@ class AddFamilyAlarmScreen extends StatelessWidget {
               } else if (_typeVal.value == types[2]) {
                 return Column(
                   children: [
-                    Text("Adim"),
+                    Text("Adım Sayısı"),
                     Card(
                         margin: EdgeInsets.all(20),
                         child: Padding(
@@ -192,10 +214,11 @@ class AddFamilyAlarmScreen extends StatelessWidget {
                     ),
                   ],
                 );
-              } else
+              } else {
                 return SizedBox(
                   height: 40,
                 );
+              }
             }),
             SizedBox(
               height: 20,

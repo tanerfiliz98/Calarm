@@ -94,7 +94,6 @@ class AlarmScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 52,
                       fontWeight: FontWeight.w900,
-                      color: Colors.white,
                     ),
                   ),
                   Obx(() {
